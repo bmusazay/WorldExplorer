@@ -9,7 +9,13 @@
 #include "Libraries\glm\gtc\matrix_transform.hpp"
 #include "Libraries\glm\gtc\type_ptr.hpp"
 
+#include "Camera.h"
+#include "Mouse.h"
+
 #define PI 3.14159265f
+
+Camera camera;
+Mouse mouse;
 
 void drawButtons();
 
@@ -41,22 +47,6 @@ float lx = 0.0f, lz = -1.0f;
 float x = 0.0f, z = 5.0f;
 
 int refreshRate = 15;
-
-//struct for keeping track of mouse input with GLUT functions
-struct Mouse
-{
-	int x;		/*	the x coordinate of the mouse cursor	*/
-	int y;		/*	the y coordinate of the mouse cursor	*/
-	int lmb;	/*	is the left button pressed?		*/
-	int mmb;	/*	is the middle button pressed?	*/
-	int rmb;	/*	is the right button pressed?	*/
-	int xpress; /*	stores the x-coord of when the first button press occurred	*/
-	int ypress; /*	stores the y-coord of when the first button press occurred	*/
-};
-typedef struct Mouse Mouse;
-
-//global instance of mouse information
-Mouse TheMouse = { 0, 0, 0, 0, 0 };
 
 typedef void(*ButtonCallback)();
 struct Button
@@ -346,7 +336,7 @@ int ButtonClickTest(Button* b, int x, int y)
 	}
 	return 0;
 }
-
+/*
 void ButtonRelease(int x, int y)
 {
 	Button* b = buttonList;
@@ -406,7 +396,7 @@ void ButtonPassive(int x, int y)
 		glutPostRedisplay();
 	}
 }
-
+*/
 
 /* Initialize OpenGL Graphics and Buttons */
 void initGL()
@@ -732,6 +722,13 @@ void Draw3D()
 
 void Draw()
 {
+
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45, (WINDOW_HEIGHT == 0) ? (1) : ((float)WINDOW_WIDTH / WINDOW_HEIGHT), 1, 100);
+	gluLookAt(0, 0, 20, 0, 0, 0, 0, 1, 0);
+
 	//prepare for 3d drawing
 	glClear(GL_COLOR_BUFFER_BIT |
 		GL_DEPTH_BUFFER_BIT);
@@ -827,8 +824,6 @@ void MouseButton(int button, int state, int x, int y)
 
 void MouseMotion(int x, int y)
 {
-	//y = winh - y;
-	//change in location
 	int dx = x - TheMouse.x;
 	int dy = y - TheMouse.y;
 
@@ -880,11 +875,13 @@ int main(int argc, char** argv)
 
 	glutCreateWindow("Lights and Shading");  // Create window with the given title
 	
+	camera = new Camera;
+	mouse = new Mouse;
+
 	glutReshapeFunc(Resize);
 	glutDisplayFunc(Draw);       // Register callback handler for window re-paint event
 	glutMotionFunc(MouseMotion);
-	glutPassiveMotionFunc(MousePassiveMotion);
-	glutMouseFunc(MouseButton);
+	glutPassiveMotionFunc(mouse.mouseMotion);
 	glutTimerFunc(0, timer, 0);
 	glutSpecialFunc(processSpecialKeys);
 	initGL();                       // Our own OpenGL initialization
