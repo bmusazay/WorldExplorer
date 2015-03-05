@@ -9,13 +9,17 @@
 #include "Libraries\glm\gtc\matrix_transform.hpp"
 #include "Libraries\glm\gtc\type_ptr.hpp"
 
+using namespace std;
+
 #include "Camera.h"
 #include "Mouse.h"
+#include "Keyboard.h"
 
 #define PI 3.14159265f
 
-Camera camera;
-Mouse mouse;
+Camera* camera;
+Mouse* mouse;
+Keyboard* keyboard;
 
 void drawButtons();
 
@@ -46,7 +50,7 @@ float angle = 0.0f;
 float lx = 0.0f, lz = -1.0f;
 float x = 0.0f, z = 5.0f;
 
-int refreshRate = 15;
+int refreshRate = 60;
 
 typedef void(*ButtonCallback)();
 struct Button
@@ -304,11 +308,11 @@ static void scaleCubeAllBcb()
 }
 static void moveinCB()
 {
-	move += 0.1f;
+	//move += 0.1f;
 }
 static void moveoutCB()
 {
-	move -= 0.1f;
+	//move -= 0.1f;
 }
 //Font function for drawing text to buttons
 void Font(void *font, char *text, int x, int y)
@@ -565,7 +569,7 @@ void Draw3D()
 	//glEnable(GL_LIGHTING);
 	gluLookAt(x, 1.0f, z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
 	
-	glTranslatef(0.0f, 0.0f, -1.0f + move);
+	//glTranslatef(0.0f, 0.0f, -1.0f + move);
 	// DRAW CUBE
 	glEnable(GL_LIGHTING);
 	glEnable(GL_COLOR_MATERIAL);
@@ -722,13 +726,6 @@ void Draw3D()
 
 void Draw()
 {
-
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45, (WINDOW_HEIGHT == 0) ? (1) : ((float)WINDOW_WIDTH / WINDOW_HEIGHT), 1, 100);
-	gluLookAt(0, 0, 20, 0, 0, 0, 0, 1, 0);
-
 	//prepare for 3d drawing
 	glClear(GL_COLOR_BUFFER_BIT |
 		GL_DEPTH_BUFFER_BIT);
@@ -741,8 +738,18 @@ void Draw()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45, (winh == 0) ? (1) : ((float)winw / winh), 1, 100);
+
+	camera->rotateCamera(mouse->x, mouse->y);
+
+	keyboard->xRot = camera->xRot;
+	keyboard->yRot = camera->yRot;
+	camera->moveCamera(keyboard->xPos, keyboard->yPos, keyboard->zPos);
+
+	cout << mouse->x << " " << mouse->y << endl;
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
 	Draw3D();
 	
 	//prepare for 2d overlay
@@ -762,77 +769,6 @@ void Resize(int w, int h)
 	winw = w;
 	winh = h;
 	glViewport(0, 0, w, h);
-}
-
-//Keep track of mouse hover position
-void MousePassiveMotion(int x, int y)
-{
-	//y = winh - y;
-	//change in mouse position
-	int dx = x - TheMouse.x;
-	int dy = y - TheMouse.y;
-	//update values
-	TheMouse.x = x;
-	TheMouse.y = y;
-	ButtonPassive(x, y);
-}
-
-//Function for mouse clicks
-void MouseButton(int button, int state, int x, int y)
-{
-	//y = winh - y;
-	//update the mouse position	
-	TheMouse.x = x;
-	TheMouse.y = y;
-
-	//button pressed
-	if (state == GLUT_DOWN)
-	{
-		TheMouse.xpress = x;
-		TheMouse.ypress = y;
-		switch (button)
-		{
-		case GLUT_LEFT_BUTTON:
-			TheMouse.lmb = 1;
-			ButtonPress(x, y);
-		case GLUT_MIDDLE_BUTTON:
-			TheMouse.mmb = 1;
-			break;
-		case GLUT_RIGHT_BUTTON:
-			TheMouse.rmb = 1;
-			break;
-		}
-	}
-	else //button released
-	{
-		switch (button)
-		{
-		case GLUT_LEFT_BUTTON:
-			TheMouse.lmb = 0;
-			ButtonRelease(x, y);
-			break;
-		case GLUT_MIDDLE_BUTTON:
-			TheMouse.mmb = 0;
-			break;
-		case GLUT_RIGHT_BUTTON:
-			TheMouse.rmb = 0;
-			break;
-		}
-	}
-	glutPostRedisplay();
-}
-
-void MouseMotion(int x, int y)
-{
-	int dx = x - TheMouse.x;
-	int dy = y - TheMouse.y;
-
-	TheMouse.x = x;
-	TheMouse.y = y;
-	//check if over button
-	ButtonPassive(x, y);
-
-	glutPostRedisplay();
 }
 
 void processSpecialKeys(int key, int xx, int yy)
@@ -867,6 +803,14 @@ void timer(int value) {
 	glutTimerFunc(refreshRate, timer, 0); // next timer call milliseconds later
 }
 
+void mouseFunc(int x, int y) {
+	mouse->mouseMotion(x, y);
+}
+
+void keyBoardFunc(unsigned char key, int x, int y) {
+	keyboard->keyPress(key, x, y);
+}
+
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);          // Initialize GLUT
@@ -875,13 +819,15 @@ int main(int argc, char** argv)
 
 	glutCreateWindow("Lights and Shading");  // Create window with the given title
 	
-	camera = new Camera;
+	camera = new Camera(winw, winh);
 	mouse = new Mouse;
+	keyboard = new Keyboard;
 
 	glutReshapeFunc(Resize);
 	glutDisplayFunc(Draw);       // Register callback handler for window re-paint event
-	glutMotionFunc(MouseMotion);
-	glutPassiveMotionFunc(mouse.mouseMotion);
+	glutMotionFunc(mouseFunc);
+	glutPassiveMotionFunc(mouseFunc);
+	glutKeyboardFunc(keyBoardFunc);
 	glutTimerFunc(0, timer, 0);
 	glutSpecialFunc(processSpecialKeys);
 	initGL();                       // Our own OpenGL initialization

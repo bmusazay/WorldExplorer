@@ -4,14 +4,16 @@
 class Camera {
 
 public:
-	Camera();
+	Camera(int winw, int winh);
 	void moveCamera(int newX, int newY, int newZ);
 	void rotateCamera(float xRot, float yRot);
 
-private:
 	int coordX;
 	int coordY;
 	int coordZ;
+
+	float acceleration;
+	float velocity;
 
 	float xRot;
 	float yRot;

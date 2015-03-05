@@ -7,7 +7,7 @@ Mouse::Mouse() {
 void Mouse::mouseMotion(int newX, int newY) {
 
 	difX = x - newX;
-	difY = x - newY;
+	difY = y - newY;
 
 	x = newX;
 	y = newY;
