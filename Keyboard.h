@@ -10,4 +10,6 @@ public:
 	float xPos;
 	float yPos;
 	float zPos;
+
+	float velocity = 0;
 };

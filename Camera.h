@@ -4,12 +4,13 @@
 class Camera {
 
 public:
-	Camera(int winw, int winh);
+	Camera();
 	void moveCamera(int newX, int newY, int newZ);
-	void rotateCamera(float xRot, float yRot);
+	void rotateCamera(int xRot, int yRot);
+	void checkCollision();
 
 	int coordX;
-	int coordY;
+	float coordY;
 	int coordZ;
 
 	float acceleration;
@@ -17,4 +18,6 @@ public:
 
 	float xRot;
 	float yRot;
+
+	bool collision;
 };
