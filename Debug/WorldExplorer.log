@@ -1,13 +1,10 @@
-﻿Build started 3/5/2015 8:44:38 PM.
+﻿Build started 3/5/2015 9:06:56 PM.
      1>Project "C:\Users\Momo\Documents\Visual Studio 2013\Projects\WorldExplorer\WorldExplorer.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Camera.cpp main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Keyboard.cpp main.cpp
          main.cpp
      1>c:\users\momo\documents\visual studio 2013\projects\worldexplorer\main.cpp(91): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-         Camera.cpp
-     1>c:\users\momo\documents\visual studio 2013\projects\worldexplorer\camera.cpp(4): warning C4305: '=' : truncation from 'double' to 'float'
-     1>c:\users\momo\documents\visual studio 2013\projects\worldexplorer\camera.cpp(31): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\momo\documents\visual studio 2013\projects\worldexplorer\camera.cpp(34): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+         Keyboard.cpp
          Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Momo\Documents\Visual Studio 2013\Projects\WorldExplorer\Debug\WorldExplorer.exe" /INCREMENTAL /NOLOGO /LIBPATH:Libraries\freeglut /LIBPATH:Libraries\glew opengl32.lib freeglut.lib glew32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Momo\Documents\Visual Studio 2013\Projects\WorldExplorer\Debug\WorldExplorer.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Momo\Documents\Visual Studio 2013\Projects\WorldExplorer\Debug\WorldExplorer.lib" /MACHINE:X86 Debug\Block.obj
@@ -15,9 +12,10 @@
          Debug\Keyboard.obj
          Debug\main.obj
          Debug\Mouse.obj
+         LINK : C:\Users\Momo\Documents\Visual Studio 2013\Projects\WorldExplorer\Debug\WorldExplorer.exe not found or not built by the last incremental link; performing full link
          WorldExplorer.vcxproj -> C:\Users\Momo\Documents\Visual Studio 2013\Projects\WorldExplorer\Debug\WorldExplorer.exe
      1>Done Building Project "C:\Users\Momo\Documents\Visual Studio 2013\Projects\WorldExplorer\WorldExplorer.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.51
+Time Elapsed 00:00:02.37
